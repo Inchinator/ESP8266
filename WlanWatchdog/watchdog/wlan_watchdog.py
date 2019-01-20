@@ -26,6 +26,7 @@ round trip time = {}ms
 """
 	errorlog = """
 Ping failed ({})
+count: {}
 STA status: {}
 	connected: {}
 	cfg: {}
@@ -39,10 +40,10 @@ Exception:
 """
 	
 	def __init__(self):
-		self.do_log("\n\nExecution start: " + str(self.get_time()) + " \n")
+		self.do_log("Execution start: \n" + str(self.get_time()) + " \n")
 		self.init_wlan()
 		self.watchdog_start()
-		self.do_log("\n\nExecution end: " + str(self.get_time()) + " \n")
+		self.do_log("Execution end: \n" + str(self.get_time()) + " \n")
 		self.debug_print("wlan_watchdog was killed")
 	
 	def init_wlan(self):
@@ -70,7 +71,7 @@ Exception:
 
 
 	def log_error(self, exception):
-		self.do_log(self.errorlog.format(self.get_time(), self.sta_if.active(), self.sta_if.isconnected(), self.sta_if.ifconfig(), self.ap_if.active(), self.ap_if.isconnected(), self.ap_if.ifconfig(), exception))
+		self.do_log(self.errorlog.format(self.get_time(), self.counter, self.sta_if.active(), self.sta_if.isconnected(), self.sta_if.ifconfig(), self.ap_if.active(), self.ap_if.isconnected(), self.ap_if.ifconfig(), exception))
 	
 	
 	def debug_print(self, message):
@@ -90,7 +91,7 @@ Exception:
 		while self.active:
 			self.counter += 1 
 			self.debug_print("pinging... #" + str(self.counter))
-			self.log_header()
+			#self.log_header()
 			
 			try:
 				clientsocket = socket.socket()
@@ -99,8 +100,8 @@ Exception:
 				clientsocket.send(self.command.encode("ascii"))
 				data = clientsocket.recv(1024)
 				endtime = utime.ticks_ms()
-				self.log_success(endtime-starttime)
-				self.debug_print("successfull ping")
+				#self.log_success(endtime-starttime)
+				self.debug_print("successfull ping ({}ms)".format(endtime-starttime))
 				
 			except Exception as e:
 				self.log_error(e)
