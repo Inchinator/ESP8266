@@ -4,7 +4,7 @@ import utime
 
 class wlan_watchdog():
 	server_address = ["89.163.145.12", 5802]
-	wlan_address = ["XXXXXXXX", "XXXXXXXX"] #TODO: insert wlan address-info [ESSID, password]
+	wlan_address = ["XXXXXXXXX", "XXXXXXXXX"] #TODO: insert wlan address-info [ESSID, password]
 	logfile = "wifi_watchdog.log"
 	command = "ping"
 	debug = True
@@ -43,6 +43,7 @@ Exception:
 		self.do_log("Execution start: \n" + str(self.get_time()) + " \n")
 		self.init_wlan()
 		self.watchdog_start()
+		self.do_log("Counter: " + str(self.counter) + "\n")
 		self.do_log("Execution end: \n" + str(self.get_time()) + " \n")
 		self.debug_print("wlan_watchdog was killed")
 	
@@ -100,7 +101,7 @@ Exception:
 				clientsocket.send(self.command.encode("ascii"))
 				data = clientsocket.recv(1024).decode('ascii')
 				endtime = utime.ticks_ms()
-				if (data == "ping reply"): raise Exception('I know Python!')
+				if (data != "ping reply"): raise Exception('corrupted data')
 				#self.log_success(endtime-starttime)
 				self.debug_print("successfull ping ({}ms)".format(endtime-starttime))
 				
