@@ -98,8 +98,9 @@ Exception:
 				clientsocket.connect(self.server_address)
 				starttime = utime.ticks_ms()
 				clientsocket.send(self.command.encode("ascii"))
-				data = clientsocket.recv(1024)
+				data = clientsocket.recv(1024).decode('ascii')
 				endtime = utime.ticks_ms()
+				if (data == "ping reply"): raise Exception('I know Python!')
 				#self.log_success(endtime-starttime)
 				self.debug_print("successfull ping ({}ms)".format(endtime-starttime))
 				
